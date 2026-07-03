@@ -5,13 +5,14 @@ import { ArrowDown, Github, Linkedin, Mail, Sparkles } from "lucide-react";
 import { Cursor } from "@/components/portfolio/Cursor";
 import { SkillsOrbit } from "@/components/portfolio/SkillsOrbit";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
-
+import profilePic from "@/assets/1782846955275.png";
 const Scene3D = lazy(() =>
   import("@/components/portfolio/Scene3D").then((m) => ({ default: m.HeroScene }))
 );
 const ContactScene = lazy(() =>
   import("@/components/portfolio/Scene3D").then((m) => ({ default: m.ContactScene }))
-);
+);  
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,7 +33,23 @@ function Portfolio() {
   const { scrollYProgress } = useScroll();
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -120]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
-
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
+     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const res = await fetch("https://formspree.io/f/mnjkoyvb", {
+      method: "POST",
+      body: data,
+      headers: { Accept: "application/json" },
+    });
+    if (res.ok) {
+      form.reset();
+      alert("Thanks! I'll get back to you soon.");
+    } else {
+      alert("Something went wrong. Please email me directly.");
+    }
+  }
   return (
     <div className="relative min-h-screen">
       {mounted && <Cursor />}
@@ -88,16 +105,20 @@ function Portfolio() {
       {/* ABOUT */}
       <Section id="about" label="01 / About">
         <div className="grid items-center gap-12 md:grid-cols-[260px_1fr]">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="relative mx-auto aspect-square w-56 overflow-hidden rounded-full border border-border glass md:w-full"
-          >
-            <div className="absolute inset-0" style={{ background: "var(--gradient-aurora)", opacity: 0.4 }} />
-            <div className="absolute inset-0 flex items-center justify-center font-display text-7xl font-bold text-foreground/40">M</div>
-          </motion.div>
+         <motion.div
+  initial={{ opacity: 0, scale: 0.9 }}
+  whileInView={{ opacity: 1, scale: 1 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.7 }}
+  className="relative mx-auto aspect-square w-56 overflow-hidden rounded-full border border-border glass md:w-full"
+>
+  <img
+    src={profilePic}
+    alt="Malak"
+    className="absolute inset-0 h-full w-full object-cover"
+    loading="lazy"
+  />
+</motion.div>
           <div>
             <h2 className="font-display text-4xl font-semibold sm:text-5xl">
               I build interfaces where <span className="text-gradient">design meets engineering</span>.
@@ -190,10 +211,24 @@ function Portfolio() {
           <h2 className="mt-4 font-display text-5xl font-semibold sm:text-6xl">
             Let's build <span className="text-gradient">something</span>.
           </h2>
-          <p className="mt-4 text-muted-foreground">
-            Whether it's an internship, freelance project, or a friendly hello — my inbox is open.
-          </p>
-
+<form
+  onSubmit={handleSubmit}
+  className="mx-auto mt-10 grid max-w-xl gap-4 text-left"
+>
+  <input data-hoverable name="name" required placeholder="Your name"
+    className="rounded-2xl border border-border bg-background/40 px-5 py-4 text-sm outline-none transition focus:border-primary glass" />
+  <input data-hoverable name="email" type="email" required placeholder="Email"
+    className="rounded-2xl border border-border bg-background/40 px-5 py-4 text-sm outline-none transition focus:border-primary glass" />
+  <textarea data-hoverable name="message" required rows={4} placeholder="Tell me about your project…"
+    className="resize-none rounded-2xl border border-border bg-background/40 px-5 py-4 text-sm outline-none transition focus:border-primary glass" />
+  <button data-hoverable type="submit"
+    className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:scale-[1.01]">
+    Send message <Mail className="h-4 w-4" />
+  </button>
+</form>
+{status === "sending" && <p className="mt-4 text-sm text-muted-foreground">Sending…</p>}
+{status === "ok" && <p className="mt-4 text-sm text-accent">Thanks! I'll get back to you soon.</p>}
+{status === "error" && <p className="mt-4 text-sm text-destructive">Something went wrong. Please email me directly.</p>}
           <form
             onSubmit={(e) => { e.preventDefault(); window.location.href = "mailto:hello@malak.dev"; }}
             className="mx-auto mt-10 grid max-w-xl gap-4 text-left"
@@ -218,6 +253,7 @@ function Portfolio() {
             ))}
           </div>
         </div>
+        
       </section>
 
       <footer className="relative z-10 border-t border-border py-8 text-center text-xs text-muted-foreground">
