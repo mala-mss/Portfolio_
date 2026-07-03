@@ -17,8 +17,8 @@ const ContactScene = lazy(() =>
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Malak — Full-Stack & Mobile Developer" },
-      { name: "description", content: "Portfolio of Malak, a final-year CS student crafting full-stack web and Android experiences with React, Node.js, and Kotlin." },
+      { title: "Ibtihal Moussa  — Full-Stack & Mobile Developer" },
+      { name: "description", content: "Portfolio of Ibtihal Moussa, a final-year CS student crafting full-stack web and Android experiences with React, Node.js, and Kotlin." },
       { property: "og:title", content: "Malak — Full-Stack & Mobile Developer" },
       { property: "og:description", content: "Portfolio of Malak, a final-year CS student crafting full-stack web and Android experiences." },
     ],
@@ -76,7 +76,7 @@ function Portfolio() {
               Based in Algeria · Open to opportunities
             </div>
             <h1 className="mt-8 font-display text-[clamp(3rem,10vw,8rem)] font-bold leading-[0.95]">
-              Malak<span className="text-gradient">.</span>
+              Ibtihal Moussa<span className="text-gradient">.</span>
             </h1>
             <p className="mt-4 max-w-2xl font-display text-2xl font-light text-foreground/80 sm:text-3xl">
               Full-Stack & Mobile Developer crafting <span className="text-gradient font-medium">immersive digital experiences</span>.
